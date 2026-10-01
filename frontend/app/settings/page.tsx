@@ -423,8 +423,14 @@ export default function SettingsPage() {
             >
               <option value="openai">OpenAI (Gemini as fallback)</option>
               <option value="gemini">Google Gemini (OpenAI as fallback)</option>
+              <option value="gemini_web">Gemini Web bridge (Gemini API as fallback)</option>
             </select>
           </Field>
+          {profile.image_primary_provider === "gemini_web" && (
+            <p className="text-xs leading-5 text-ink-300">
+              Uses the local Gemini Web bridge configured on the backend. The bridge keeps the signed-in browser session outside this app and falls back to the API providers when it is offline.
+            </p>
+          )}
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Field label="OpenAI Model" required>

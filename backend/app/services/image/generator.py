@@ -1,3 +1,4 @@
+import base64
 import io
 import uuid
 from typing import Optional, Tuple, Dict, Any, List
@@ -124,6 +125,59 @@ class GeminiImageProvider(ImageProvider):
             logger.error(f"[GeminiImageProvider] Generation failed ({self.model_name}): {e}")
 
         return None
+
+
+class GeminiWebBridgeProvider(ImageProvider):
+    """Delegates generation to a locally hosted, authenticated Gemini Web bridge.
+
+    The bridge owns browser authentication. Keeping credentials out of this API
+    process makes the provider opt-in and prevents a browser session from being
+    copied into application configuration.
+    """
+
+    def __init__(self):
+        self.bridge_url = (settings.GEMINI_WEB_BRIDGE_URL or "").strip()
+        self.token = settings.GEMINI_WEB_BRIDGE_TOKEN
+        self.available = self.bridge_url.startswith(("http://", "https://"))
+
+    def generate(
+        self,
+        prompt: str,
+        width: int = 1024,
+        height: int = 1024,
+        reference_image_bytes: Optional[bytes] = None,
+    ) -> Optional[bytes]:
+        if not self.available:
+            logger.info("[GeminiWebBridgeProvider] No GEMINI_WEB_BRIDGE_URL configured; skipping.")
+            return None
+
+        import httpx
+
+        payload: Dict[str, Any] = {
+            "prompt": prompt[:2000],
+            "width": width,
+            "height": height,
+        }
+        if reference_image_bytes:
+            payload["reference_image_base64"] = base64.b64encode(reference_image_bytes).decode("ascii")
+
+        headers = {"Authorization": f"Bearer {self.token}"} if self.token else {}
+        try:
+            response = httpx.post(self.bridge_url, json=payload, headers=headers, timeout=120)
+            response.raise_for_status()
+            if response.headers.get("content-type", "").lower().startswith("image/"):
+                return response.content
+
+            image_base64 = (response.json() or {}).get("image_base64")
+            if not image_base64:
+                logger.warning("[GeminiWebBridgeProvider] Bridge response did not contain image_base64.")
+                return None
+            if image_base64.startswith("data:"):
+                image_base64 = image_base64.split(",", 1)[-1]
+            return base64.b64decode(image_base64, validate=True)
+        except Exception as exc:
+            logger.warning(f"[GeminiWebBridgeProvider] Bridge request failed: {exc}")
+            return None
 
 
 class CloudflareImageProvider(ImageProvider):
@@ -409,7 +463,16 @@ async def generate_and_store_image(
         if settings.IMAGE_API_KEY or settings.OPENAI_API_KEY:
             providers.append(DALLEImageProvider(model_name=openai_model, quality=openai_quality))
 
-    if primary_provider == "openai":
+    def add_gemini_web_bridge():
+        provider = GeminiWebBridgeProvider()
+        if provider.available:
+            providers.append(provider)
+
+    if primary_provider == "gemini_web":
+        add_gemini_web_bridge()
+        add_gemini_providers()
+        add_openai_provider()
+    elif primary_provider == "openai":
         add_openai_provider()
         add_gemini_providers()
     else:
@@ -438,7 +501,7 @@ async def generate_and_store_image(
 
         logger.info(f"[ImageGen] Attempting generation with provider: {provider_name}")
         try:
-            if isinstance(provider, GeminiImageProvider):
+            if isinstance(provider, (GeminiImageProvider, GeminiWebBridgeProvider)):
                 image_bytes = provider.generate(clean_prompt, reference_image_bytes=ref_bytes)
             else:
                 image_bytes = provider.generate(clean_prompt)

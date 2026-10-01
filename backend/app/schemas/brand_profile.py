@@ -40,7 +40,7 @@ class BrandProfileData(BaseModel):
     target_audience: str = "Construction 3D-printing companies, large-scale 3D concrete printing manufacturers, construction 3D-printing engineers, robotics engineers developing 3D-printing systems, concrete and printable-material researchers, structural engineers working on 3D-printed structures, researchers developing 3D-printing techniques, and companies developing 3D-printing hardware, software, materials, and robotic systems for construction."
     brand_principle: str = "Real construction robotics deployed in real environments."
     post_length: str = "medium"
-    image_primary_provider: str = "openai"
+    image_primary_provider: str = "openai"  # openai | gemini | gemini_web
     image_openai_model: str = "gpt-image-1-mini"
     image_openai_quality: str = "medium"
     competitors: List[str] = Field(
@@ -85,7 +85,7 @@ class BrandProfileRequest(BaseModel):
     target_audience: str
     brand_principle: Optional[str] = None
     post_length: Optional[str] = "medium"
-    image_primary_provider: Optional[str] = "openai"
+    image_primary_provider: Optional[str] = "openai"  # openai | gemini | gemini_web
     image_openai_model: Optional[str] = "gpt-image-1-mini"
     image_openai_quality: Optional[str] = "medium"
     competitors: List[str] = Field(default_factory=list)

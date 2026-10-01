@@ -168,6 +168,24 @@ def test_gemini_image_provider_imagen3():
     provider.client.models.generate_images.assert_called_once()
 
 
+def test_gemini_web_bridge_decodes_image_response(monkeypatch):
+    import base64
+    from unittest.mock import MagicMock
+    from app.services.image.generator import GeminiWebBridgeProvider
+
+    provider = GeminiWebBridgeProvider()
+    provider.bridge_url = "http://127.0.0.1:8765/generate"
+    provider.available = True
+    response = MagicMock()
+    response.headers = {"content-type": "application/json"}
+    response.json.return_value = {"image_base64": base64.b64encode(b"bridge_image").decode("ascii")}
+
+    with patch("httpx.post", return_value=response) as post:
+        assert provider.generate("A grounded robotic concrete printer") == b"bridge_image"
+
+    assert post.call_args.kwargs["json"]["prompt"] == "A grounded robotic concrete printer"
+
+
 def test_image_generation_waterfall_order():
     from app.services.image.generator import GeminiImageProvider, CloudflareImageProvider, DALLEImageProvider, StubImageProvider
     from app.config.settings import settings

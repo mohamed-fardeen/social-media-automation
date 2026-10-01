@@ -61,7 +61,7 @@ export type BrandProfile = {
   brand_voice?: string | null;
   brand_principle?: string | null;
   post_length?: "short" | "medium" | "long";
-  image_primary_provider?: "openai" | "gemini";
+  image_primary_provider?: "openai" | "gemini" | "gemini_web";
   image_openai_model?: string;
   image_openai_quality?: "low" | "medium" | "high";
   competitors?: string[];

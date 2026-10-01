@@ -20,6 +20,10 @@ class Settings(BaseSettings):
     GEMINI_TEXT_API_KEY: Optional[str] = None    # Dedicated text reasoning key
     GEMINI_IMAGE_MODEL: str = "gemini-3.1-flash-image"
     GEMINI_TEXT_MODEL: str = "gemini-3.6-flash"
+    # Optional local service that owns an authenticated Gemini Web browser session.
+    # It receives a prompt and returns JSON containing image_base64.
+    GEMINI_WEB_BRIDGE_URL: Optional[str] = None
+    GEMINI_WEB_BRIDGE_TOKEN: Optional[str] = None
 
     # Cloudflare Workers AI (Image Generation Fallback)
     CF_ACCOUNT_ID: str = ""
