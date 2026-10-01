@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m py_compile app/services/image/generator.py)",
+      "Read(//c/Users/Abdullah/Documents/Social Media Automation/**)",
+      "Bash(python -m py_compile app/graph/workflow.py app/graph/state.py)",
+      "Bash(python -m py_compile app/api/v1/runs.py app/schemas/api.py)",
+      "Bash(python -m py_compile app/api/webhooks.py app/services/telegram_bot.py app/graph/workflow.py app/graph/state.py app/api/v1/runs.py app/schemas/api.py)",
+      "Bash(python -c \"from app.graph.workflow import ideation_node, await_idea_selection_node, build_graph; g=build_graph\\(\\); print\\('graph nodes:', list\\(g.nodes.keys\\(\\)\\) if hasattr\\(g,'nodes'\\) else g\\)\")",
+      "Bash(npx tsc *)",
+      "Bash(grep -v \"^\\\\s*$\")",
+      "Bash(python -c ' *)",
+      "Bash(curl -s http://localhost:3000/studio)",
+      "Bash(curl -s -o /tmp/studio.html http://localhost:3000/studio)",
+      "Read(//tmp/**)",
+      "Bash(curl -s \"http://localhost:3000/_next/static/chunks/app/studio/page.js\")",
+      "Bash(grep -oE \"Cannot[^\\\\\\\\\\\\\"]{0,80}|Module not found[^\\\\\\\\\\\\\"]{0,80}|ReferenceError[^\\\\\\\\\\\\\"]{0,80}\")",
+      "Bash(curl -s -w \"\\\\nHTTP_CODE:%{http_code}\\\\n\" http://localhost:3000/studio)",
+      "Bash(curl -s -X POST http://localhost:3000/__nextjs_original-stack-frame)",
+      "Bash(curl -s -i http://localhost:3000/studio)",
+      "Bash(curl -s -w \"HTTP:%{http_code}\\\\n\" -o /dev/null http://localhost:3000/)",
+      "Bash(curl -s -w \"HTTP:%{http_code}\\\\n\" -o /dev/null http://localhost:3000/research)",
+      "Bash(curl -s -w \"HTTP:%{http_code}\\\\n\" -o /dev/null http://localhost:3000/studio)",
+      "Bash(nohup npm run dev)",
+      "Bash(echo \"PID $!\")",
+      "Bash(curl -s -o /dev/null -w \"/:%{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s -o /dev/null -w \"/studio:%{http_code}\\\\n\" http://localhost:3000/studio)",
+      "Bash(python -m py_compile app/api/v1/research.py)",
+      "Bash(curl *)"
+    ]
+  }
+}

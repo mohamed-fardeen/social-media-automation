@@ -1,0 +1,11 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch();
+const p = await b.newPage();
+p.on('pageerror', e => console.log('[err]', e.message.slice(0,200)));
+p.on('console', m => { if (m.type()==='error' || m.type()==='warning') console.log('[c]', m.type(), m.text().slice(0,200)); });
+p.on('response', async r => { if (r.url().includes('post_drafts')) console.log('[rest]', r.status(), (await r.text().catch(()=>'')).slice(0,160)); });
+await p.goto('http://localhost:3000/studio', { waitUntil: 'networkidle' });
+await p.waitForTimeout(7000);
+const body = (await p.textContent('body')).replace(/\s+/g,' ').slice(0,400);
+console.log('body:', body);
+await b.close();

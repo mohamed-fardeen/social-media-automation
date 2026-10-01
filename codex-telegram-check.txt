@@ -1,0 +1,55 @@
+ENTRIES
+f:.env.local
+f:.eslintrc.json
+d:.next
+d:app
+d:components
+d:lib
+f:next-env.d.ts
+f:next.config.mjs
+d:node_modules
+f:package-lock.json
+f:package.json
+f:postcss.config.mjs
+f:probe3.mjs
+f:tailwind.config.ts
+f:tsconfig.json
+f:tsconfig.tsbuildinfo
+
+PACKAGE
+{
+  "name": "kelvin6k",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.4",
+    "clsx": "^2.1.1",
+    "date-fns": "^3.6.0",
+    "framer-motion": "^11.5.4",
+    "lucide-react": "^0.445.0",
+    "next": "14.2.13",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "recharts": "^2.12.7",
+    "tailwind-merge": "^2.5.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.16.5",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "14.2.13",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.11",
+    "typescript": "^5.5.4"
+  }
+}

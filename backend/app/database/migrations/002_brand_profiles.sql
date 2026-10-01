@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS public.brand_profiles (
+    id TEXT PRIMARY KEY DEFAULT 'default',
+    company_name TEXT NOT NULL,
+    website TEXT,
+    industry TEXT NOT NULL,
+    target_audience TEXT NOT NULL,
+    products_services TEXT,
+    brand_voice TEXT,
+    competitors TEXT[] DEFAULT '{}',
+    instagram_handle TEXT,
+    linkedin_handle TEXT,
+    goals TEXT,
+    content_themes TEXT[] DEFAULT '{}',
+    approval_channel TEXT DEFAULT 'none',
+    telegram_bot_token TEXT,
+    telegram_chat_id TEXT,
+    telegram_webhook_secret TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
